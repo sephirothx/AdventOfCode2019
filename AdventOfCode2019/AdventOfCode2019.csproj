@@ -5,4 +5,10 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="ReStructure">
+      <HintPath>..\..\..\..\..\..\dev\ReStructure\ReStructure\bin\Release\netstandard2.0\ReStructure.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
