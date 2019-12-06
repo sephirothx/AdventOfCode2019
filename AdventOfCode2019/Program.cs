@@ -8,10 +8,10 @@ namespace AdventOfCode2019
         private static void Main()
         {
             const string PATH  = @"C:\Users\User\Documents\input.txt";
-            var          input = File.ReadAllLines(PATH);
+            var          input = File.ReadAllText(PATH);
 
             Console.WriteLine(DateTime.Now.TimeOfDay);
-            Day4.Part2(input);
+            Day5.Part2(input);
             Console.WriteLine(DateTime.Now.TimeOfDay);
         }
     }

@@ -7,11 +7,13 @@ namespace AdventOfCode2019
     {
         public static void Part1(string input)
         {
-            var numbers = ParseInput(input);
-            numbers[1] = 12;
-            numbers[2] = 2;
+            var program = ParseInput(input);
+            program[1] = 12;
+            program[2] = 2;
 
-            Console.WriteLine(Compute(numbers));
+            Intcode.Instance.Compute(program);
+
+            Console.WriteLine(program[0]);
         }
 
         public static void Part2(string input)
@@ -28,9 +30,12 @@ namespace AdventOfCode2019
                 work[1] = i;
                 work[2] = j;
 
-                if (Compute(work) == MAGIC_NUMBER)
+                Intcode.Instance.Compute(work);
+
+                if (work[0] == MAGIC_NUMBER)
                 {
                     Console.WriteLine(100 * i + j);
+                    return;
                 }
             }
         }
@@ -40,31 +45,6 @@ namespace AdventOfCode2019
             return input.Split(',')
                         .Select(int.Parse)
                         .ToArray();
-        }
-
-        private static int Compute(int[] numbers)
-        {
-            for (int i = 0; i < numbers.Length; i += 4)
-            {
-                int opcode = numbers[i];
-                int num1   = numbers[i + 1];
-                int num2   = numbers[i + 2];
-                int target = numbers[i + 3];
-
-                switch (opcode)
-                {
-                case 1:
-                    numbers[target] = numbers[num1] + numbers[num2];
-                    break;
-                case 2:
-                    numbers[target] = numbers[num1] * numbers[num2];
-                    break;
-                case 99:
-                    return numbers[0];
-                }
-            }
-
-            return 0;
         }
     }
 }

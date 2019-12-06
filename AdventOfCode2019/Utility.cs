@@ -2,8 +2,28 @@
 
 namespace AdventOfCode2019
 {
+    public enum Direction
+    {
+        Right,
+        Left,
+        Down,
+        Up
+    }
+
     public static class Utility
     {
+        public static (int x, int y) GetDirection(Direction dir)
+        {
+            switch (dir)
+            {
+            case Direction.Right: return (1, 0);
+            case Direction.Left:  return (-1, 0);
+            case Direction.Down:  return (0, -1);
+            case Direction.Up:    return (0, 1);
+            default:              throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
+            }
+        }
+
         #region ManhattanDistance
 
         public static int ManhattanDistance(int x1, int y1, int x2, int y2)
