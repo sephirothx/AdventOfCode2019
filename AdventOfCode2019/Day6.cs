@@ -91,33 +91,29 @@ namespace AdventOfCode2019
 
         private static Dictionary<string, Node> ParseInput(string[] input)
         {
-            var sats = new Dictionary<string, Node> {{"COM", new Node()}};
+            var nodes = new Dictionary<string, Node> {{"COM", new Node()}};
 
             foreach (string s in input)
             {
-                var regex = new Regex(@"(.+)\)(.+)");
-                var match = regex.Match(s);
+                var edge = s.Split(')');
 
-                string par = match.Groups[1].Value;
-                string sat = match.Groups[2].Value;
-
-                if (!sats.TryGetValue(par, out var parent))
+                if (!nodes.TryGetValue(edge[0], out var parent))
                 {
                     parent = new Node();
-                    sats.Add(par, parent);
+                    nodes.Add(edge[0], parent);
                 }
 
-                if (!sats.TryGetValue(sat, out var child))
+                if (!nodes.TryGetValue(edge[1], out var child))
                 {
                     child = new Node();
-                    sats.Add(sat, child);
+                    nodes.Add(edge[1], child);
                 }
 
                 child.Parent = parent;
                 parent.Children.Add(child);
             }
 
-            return sats;
+            return nodes;
         }
     }
 }
