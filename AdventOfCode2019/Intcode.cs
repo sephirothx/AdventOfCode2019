@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace AdventOfCode2019
@@ -51,18 +52,30 @@ namespace AdventOfCode2019
         private static Intcode _instance;
         public static  Intcode Instance => _instance ??= new Intcode();
 
-        private int   _ip;
-        private int[] _program;
-
-        private Intcode()
+        private readonly Queue<int> _inputs = new Queue<int>();
+        public int Input
         {
+            set => _inputs.Enqueue(value);
         }
 
-        public void Compute(int[] program, int input = 0)
+        public void Flush()
         {
-            _program = program;
+            _inputs.Clear();
+        }
 
-            _ip = 0;
+        public int Output { get; private set; }
+
+        public int IP { get; private set; }
+        public int[] Program { get; private set; }
+
+        public bool IsOver { get; private set; }
+
+        public void Compute(int[] program, int ip = 0, bool runToEnd = true)
+        {
+            Program = new int[program.Length];
+            Array.Copy(program, Program, program.Length);
+
+            IP = ip;
 
             while (true)
             {
@@ -72,38 +85,42 @@ namespace AdventOfCode2019
                 switch (opcode)
                 {
                 case Opcode.ADD:
-                    _program[args[2]] = args[0] + args[1];
+                    Program[args[2]] = args[0] + args[1];
                     break;
 
                 case Opcode.MUL:
-                    _program[args[2]] = args[0] * args[1];
+                    Program[args[2]] = args[0] * args[1];
                     break;
 
                 case Opcode.IN:
-                    _program[args[0]] = input;
+                    Program[args[0]] = _inputs.Dequeue();
                     break;
 
                 case Opcode.OUT:
-                    Console.WriteLine(args[0]);
+                    Output = args[0];
+                    IsOver = false;
+                    Console.WriteLine(Output);
+                    if (runToEnd == false) return;
                     break;
 
                 case Opcode.JT:
-                    if (args[0] != 0) _ip = args[1];
+                    if (args[0] != 0) IP = args[1];
                     break;
 
                 case Opcode.JF:
-                    if (args[0] == 0) _ip = args[1];
+                    if (args[0] == 0) IP = args[1];
                     break;
 
                 case Opcode.LES:
-                    _program[args[2]] = args[0] < args[1] ? 1 : 0;
+                    Program[args[2]] = args[0] < args[1] ? 1 : 0;
                     break;
 
                 case Opcode.EQ:
-                    _program[args[2]] = args[0] == args[1] ? 1 : 0;
+                    Program[args[2]] = args[0] == args[1] ? 1 : 0;
                     break;
 
                 case Opcode.HALT:
+                    IsOver = true;
                     return;
 
                 default: throw new ArgumentOutOfRangeException();
@@ -127,11 +144,11 @@ namespace AdventOfCode2019
 
         private int GetArg(Type type, Mode mode)
         {
-            int value = _program[_ip++];
+            int value = Program[IP++];
 
             int output = (type, mode) switch
             {
-                (Type.READ, Mode.Parameter) => _program[value],
+                (Type.READ, Mode.Parameter) => Program[value],
                 _                           => value
             };
 
@@ -140,7 +157,7 @@ namespace AdventOfCode2019
 
         private (Opcode opcode, Mode[] modes) Prefetch()
         {
-            int instr  = _program[_ip++];
+            int instr  = Program[IP++];
             var opcode = (Opcode)(instr % 100);
 
             int argc = _argTypes[opcode].Length;
