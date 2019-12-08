@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace AdventOfCode2019
@@ -58,11 +57,6 @@ namespace AdventOfCode2019
             set => _inputs.Enqueue(value);
         }
 
-        public void Flush()
-        {
-            _inputs.Clear();
-        }
-
         public int Output { get; private set; }
 
         public int IP { get; private set; }
@@ -99,7 +93,6 @@ namespace AdventOfCode2019
                 case Opcode.OUT:
                     Output = args[0];
                     IsOver = false;
-                    Console.WriteLine(Output);
                     if (runToEnd == false) return;
                     break;
 
