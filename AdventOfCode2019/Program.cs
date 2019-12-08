@@ -11,7 +11,7 @@ namespace AdventOfCode2019
             var          input = File.ReadAllText(PATH);
 
             Console.WriteLine(DateTime.Now.TimeOfDay);
-            Day7.Part2(input);
+            Day8.Part2(input);
             Console.WriteLine(DateTime.Now.TimeOfDay);
         }
     }
