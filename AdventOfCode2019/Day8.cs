@@ -7,7 +7,9 @@ namespace AdventOfCode2019
 {
     class Day8
     {
-        private const int DIM = 25 * 6;
+        private const int W = 25;
+        private const int H = 6;
+        private const int DIM = W * H;
 
         public static void Part1(string input)
         {
@@ -37,25 +39,19 @@ namespace AdventOfCode2019
             {
                 for (int i = 0; i < DIM; i++)
                 {
-                    if (final[i] == '2')
-                    {
-                        final[i] = l[i];
-                    }
-
-                    final[i] = final[i] switch
-                    {
-                        '1' => '#',
-                        '0' => ' ',
-                        _   => final[i]
-                    };
+                    if (final[i] == '2') final[i] = l[i];
                 }
             }
 
-            for (int i = 0; i < 6; i++)
+            var ans = new string(final)
+                     .Replace('1', '#')
+                     .Replace('0', ' ');
+
+            for (int i = 0; i < H; i++)
             {
-                for (int j = 0; j < 25; j++)
+                for (int j = 0; j < W; j++)
                 {
-                    Console.Write(final[i*25+j]);
+                    Console.Write(ans[i * W + j]);
                 }
 
                 Console.WriteLine();
