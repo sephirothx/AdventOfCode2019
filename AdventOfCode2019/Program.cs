@@ -10,9 +10,12 @@ namespace AdventOfCode2019
             const string PATH  = @"C:\Users\User\Documents\input.txt";
             var          input = File.ReadAllText(PATH);
 
-            Console.WriteLine(DateTime.Now.TimeOfDay);
+            var start = DateTime.Now.TimeOfDay;
             Day8.Part2(input);
-            Console.WriteLine(DateTime.Now.TimeOfDay);
+            var end = DateTime.Now.TimeOfDay;
+
+            Console.WriteLine();
+            Console.WriteLine($"Runtime = {(end - start).TotalMilliseconds}");
         }
     }
 }
