@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AdventOfCode2019
 {
@@ -17,6 +18,7 @@ namespace AdventOfCode2019
             JF  = 6,
             LES = 7,
             EQ  = 8,
+            REL = 9,
 
             HALT = 99
         }
@@ -24,7 +26,8 @@ namespace AdventOfCode2019
         private enum Mode
         {
             Parameter = 0,
-            Immediate = 1
+            Immediate = 1,
+            Relative  = 2
         }
 
         private enum Type
@@ -43,6 +46,7 @@ namespace AdventOfCode2019
             {Opcode.JF, new[] {Type.READ, Type.READ}},
             {Opcode.LES, new[] {Type.READ, Type.READ, Type.WRITE}},
             {Opcode.EQ, new[] {Type.READ, Type.READ, Type.WRITE}},
+            {Opcode.REL, new[] {Type.READ}},
             {Opcode.HALT, new Type[0]}
         };
 
@@ -51,23 +55,33 @@ namespace AdventOfCode2019
         private static Intcode _instance;
         public static  Intcode Instance => _instance ??= new Intcode();
 
-        private readonly Queue<int> _inputs = new Queue<int>();
-        public int Input
+        private readonly Queue<long> _inputs = new Queue<long>();
+
+        public long Input
         {
             set => _inputs.Enqueue(value);
         }
 
-        public int Output { get; private set; }
+        public long Output { get; private set; }
 
-        public int IP { get; private set; }
-        public int[] Program { get; private set; }
+        public long[] State { get; private set; }
+        public long   IP    { get; private set; }
 
         public bool IsOver { get; private set; }
 
-        public void Compute(int[] program, int ip = 0, bool runToEnd = true)
+        private long _base;
+
+        public static long[] ParseInput(string input)
         {
-            Program = new int[program.Length];
-            Array.Copy(program, Program, program.Length);
+            return input.Split(',')
+                        .Select(long.Parse)
+                        .ToArray();
+        }
+
+        public void Compute(long[] program, long ip = 0, bool runToEnd = true)
+        {
+            State = new long[program.Length * 100];
+            Array.Copy(program, State, program.Length);
 
             IP = ip;
 
@@ -79,20 +93,21 @@ namespace AdventOfCode2019
                 switch (opcode)
                 {
                 case Opcode.ADD:
-                    Program[args[2]] = args[0] + args[1];
+                    State[args[2]] = args[0] + args[1];
                     break;
 
                 case Opcode.MUL:
-                    Program[args[2]] = args[0] * args[1];
+                    State[args[2]] = args[0] * args[1];
                     break;
 
                 case Opcode.IN:
-                    Program[args[0]] = _inputs.Dequeue();
+                    State[args[0]] = _inputs.Dequeue();
                     break;
 
                 case Opcode.OUT:
                     Output = args[0];
                     IsOver = false;
+                    Console.WriteLine(Output);
                     if (runToEnd == false) return;
                     break;
 
@@ -105,11 +120,15 @@ namespace AdventOfCode2019
                     break;
 
                 case Opcode.LES:
-                    Program[args[2]] = args[0] < args[1] ? 1 : 0;
+                    State[args[2]] = args[0] < args[1] ? 1 : 0;
                     break;
 
                 case Opcode.EQ:
-                    Program[args[2]] = args[0] == args[1] ? 1 : 0;
+                    State[args[2]] = args[0] == args[1] ? 1 : 0;
+                    break;
+
+                case Opcode.REL:
+                    _base += args[0];
                     break;
 
                 case Opcode.HALT:
@@ -121,12 +140,12 @@ namespace AdventOfCode2019
             }
         }
 
-        private int[] Fetch(Opcode opcode, Mode[] modes)
+        private long[] Fetch(Opcode opcode, Mode[] modes)
         {
             var argTypes = _argTypes[opcode];
             int argc     = argTypes.Length;
 
-            var args = new int[argc];
+            var args = new long[argc];
             for (int i = 0; i < argc; i++)
             {
                 args[i] = GetArg(argTypes[i], modes[i]);
@@ -135,13 +154,15 @@ namespace AdventOfCode2019
             return args;
         }
 
-        private int GetArg(Type type, Mode mode)
+        private long GetArg(Type type, Mode mode)
         {
-            int value = Program[IP++];
+            long value = State[IP++];
 
-            int output = (type, mode) switch
+            long output = (type, mode) switch
             {
-                (Type.READ, Mode.Parameter) => Program[value],
+                (Type.READ, Mode.Parameter) => State[value],
+                (Type.READ, Mode.Relative)  => State[value + _base],
+                (Type.WRITE, Mode.Relative) => value + _base,
                 _                           => value
             };
 
@@ -150,8 +171,8 @@ namespace AdventOfCode2019
 
         private (Opcode opcode, Mode[] modes) Prefetch()
         {
-            int instr  = Program[IP++];
-            var opcode = (Opcode)(instr % 100);
+            long instr  = State[IP++];
+            var  opcode = (Opcode)(instr % 100);
 
             int argc = _argTypes[opcode].Length;
             var mode = new Mode[argc];

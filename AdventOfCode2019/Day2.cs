@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace AdventOfCode2019
 {
@@ -7,7 +6,7 @@ namespace AdventOfCode2019
     {
         public static void Part1(string input)
         {
-            var program = ParseInput(input);
+            var program = Intcode.ParseInput(input);
             program[1] = 12;
             program[2] = 2;
 
@@ -18,33 +17,24 @@ namespace AdventOfCode2019
 
         public static void Part2(string input)
         {
-            var numbers = ParseInput(input);
             const int MAGIC_NUMBER = 19690720;
 
-            for (int i = 0; i < numbers.Length; i++)
-            for (int j = 0; j < numbers.Length; j++)
+            var program = Intcode.ParseInput(input);
+
+            for (int i = 0; i < program.Length; i++)
+            for (int j = 0; j < program.Length; j++)
             {
-                var work = new int[numbers.Length];
-                Array.Copy(numbers, work, numbers.Length);
+                program[1] = i;
+                program[2] = j;
 
-                work[1] = i;
-                work[2] = j;
+                Intcode.Instance.Compute(program);
 
-                Intcode.Instance.Compute(work);
-
-                if (work[0] == MAGIC_NUMBER)
+                if (Intcode.Instance.State[0] == MAGIC_NUMBER)
                 {
                     Console.WriteLine(100 * i + j);
                     return;
                 }
             }
-        }
-
-        private static int[] ParseInput(string input)
-        {
-            return input.Split(',')
-                        .Select(int.Parse)
-                        .ToArray();
         }
     }
 }

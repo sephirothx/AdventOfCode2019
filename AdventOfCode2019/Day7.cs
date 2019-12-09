@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AdventOfCode2019
 {
@@ -10,19 +9,19 @@ namespace AdventOfCode2019
         {
             var a = new[] {0, 1, 2, 3, 4};
 
-            var amps = new Intcode[5];
-            int ans  = int.MinValue;
+            var  amps = new Intcode[5];
+            long ans  = long.MinValue;
 
-            var program = ParseInput(input);
-            
+            var program = Intcode.ParseInput(input);
+
             for (int i = 0; i < amps.Length; i++)
             {
                 amps[i] = new Intcode();
             }
 
-            foreach (var p in Permutations(a, 0, a.Length-1))
+            foreach (var p in Permutations(a, 0, a.Length - 1))
             {
-                int signal = 0;
+                long signal = 0;
                 for (int i = 0; i < p.Length; i++)
                 {
                     amps[i].Input = p[i];
@@ -41,20 +40,20 @@ namespace AdventOfCode2019
         {
             var a = new[] {5, 6, 7, 8, 9};
 
-            var amps = new Intcode[5];
-            int ans  = int.MinValue;
+            var  amps = new Intcode[5];
+            long ans  = long.MinValue;
 
-            var program = new int[5][];
-            var ip = new int[5];
+            var program = new long[5][];
+            var ip      = new long[5];
 
-            foreach (var p in Permutations(a, 0, a.Length -1))
+            foreach (var p in Permutations(a, 0, a.Length - 1))
             {
-                int signal = 0;
+                long signal = 0;
 
                 for (int i = 0; i < p.Length; i++)
                 {
                     amps[i]       = new Intcode();
-                    program[i]    = ParseInput(input);
+                    program[i]    = Intcode.ParseInput(input);
                     ip[i]         = 0;
                     amps[i].Input = p[i];
                 }
@@ -68,7 +67,7 @@ namespace AdventOfCode2019
                         amps[i].Compute(program[i], ip[i], false);
                         signal = amps[i].Output;
 
-                        program[i] = amps[i].Program;
+                        program[i] = amps[i].State;
                         ip[i]      = amps[i].IP;
                     }
 
@@ -81,12 +80,13 @@ namespace AdventOfCode2019
             Console.WriteLine(ans);
         }
 
-        public static void Swap (ref int a, ref int b)
+        public static void Swap(ref int a, ref int b)
         {
             int temp = a;
             a = b;
             b = temp;
         }
+
         private static IEnumerable<int[]> Permutations(int[] list, int k, int m)
         {
             if (k == m)
@@ -98,20 +98,15 @@ namespace AdventOfCode2019
                 for (int i = k; i <= m; i++)
                 {
                     Swap(ref list[k], ref list[i]);
+
                     foreach (var l in Permutations(list, k + 1, m))
                     {
                         yield return l;
                     }
+
                     Swap(ref list[k], ref list[i]);
                 }
             }
-        }
-
-        private static int[] ParseInput(string input)
-        {
-            return input.Split(',')
-                        .Select(int.Parse)
-                        .ToArray();
         }
     }
 }
