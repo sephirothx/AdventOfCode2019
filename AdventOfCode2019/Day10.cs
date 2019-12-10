@@ -58,14 +58,15 @@ namespace AdventOfCode2019
 
         private static (int, int) Minterms(int x, int y)
         {
-            if (x == 0 || y == 0)
-            {
-                return (x == 0 ? 0 : x / Math.Abs(x),
-                        y == 0 ? 0 : y / Math.Abs(y));
-            }
-
             int a = Math.Abs(x),
                 b = Math.Abs(y);
+
+            if (x == 0 || y == 0)
+            {
+                return (x == 0 ? 0 : x / a,
+                        y == 0 ? 0 : y / b);
+            }
+
             while (a != 0 && b != 0)
             {
                 if (a > b)
