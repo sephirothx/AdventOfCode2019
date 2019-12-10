@@ -9,7 +9,8 @@ namespace AdventOfCode2019
         {
             int W = input[0].Length;
             int H = input.Length;
-            var grid = new int[W, H];
+
+            var asteroids = new HashSet<(int x, int y)>();
 
             for (int i = 0; i < H; i++)
             {
@@ -17,39 +18,31 @@ namespace AdventOfCode2019
 
                 for (int j = 0; j < W; j++)
                 {
-                    grid[j, i] = s[j] == '.' ? -1 : 0;
+                    if (s[j] == '#')
+                        asteroids.Add((j, i));
                 }
             }
 
             int ans = 0;
-            int x = 0,
-                y = 0;
+            int x   = 0,
+                y   = 0;
 
-            for (int i = 0; i < H; i++)
+            foreach (var center in asteroids)
             {
-                for (int j = 0; j < W; j++)
+                var seen = new HashSet<(int, int)>();
+
+                foreach (var target in asteroids)
                 {
-                    if (grid[j, i] < 0) continue;
+                    if (target == center) continue;
 
-                    var set = new HashSet<(int, int)>();
+                    seen.Add(Minterms(target.x - center.x, target.y - center.y));
+                }
 
-                    for (int k = 0; k < H; k++)
-                    {
-                        for (int l = 0; l < W; l++)
-                        {
-                            if ((i, j) == (k, l) || grid[l, k] < 0) continue;
-
-                            set.Add(Minterms(i-k, j-l));
-                        }
-                    }
-
-                    grid[j, i] = set.Count;
-                    if (set.Count > ans)
-                    {
-                        ans = set.Count;
-                        x = j;
-                        y = i;
-                    }
+                if (seen.Count > ans)
+                {
+                    ans = seen.Count;
+                    x   = center.x;
+                    y   = center.y;
                 }
             }
 
