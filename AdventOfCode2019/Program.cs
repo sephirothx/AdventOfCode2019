@@ -7,11 +7,11 @@ namespace AdventOfCode2019
     {
         private static void Main()
         {
-            const string PATH  = @"C:\Users\User\Documents\input.txt";
-            var          input = File.ReadAllLines(PATH);
+            const string PATH  = @"input.txt";
+            var          input = File.ReadAllText(PATH);
 
             var start = DateTime.Now.TimeOfDay;
-            Day10.Part1(input);
+            Day11.Part2(input);
             var end = DateTime.Now.TimeOfDay;
 
             Console.WriteLine();

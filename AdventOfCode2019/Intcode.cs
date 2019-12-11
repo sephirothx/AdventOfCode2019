@@ -80,7 +80,7 @@ namespace AdventOfCode2019
 
         public void Compute(long[] program, long ip = 0, bool runToEnd = true)
         {
-            State = new long[program.Length * 100];
+            State = new long[10000];
             Array.Copy(program, State, program.Length);
 
             IP = ip;
@@ -107,7 +107,7 @@ namespace AdventOfCode2019
                 case Opcode.OUT:
                     Output = args[0];
                     IsOver = false;
-                    Console.WriteLine(Output);
+                    //Console.WriteLine(Output);
                     if (runToEnd == false) return;
                     break;
 
