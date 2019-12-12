@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Net;
 
 namespace AdventOfCode2019
 {
@@ -12,6 +14,9 @@ namespace AdventOfCode2019
 
     public static class Utility
     {
+        public const string INPUT_PATH = @"input.txt";
+        public const string COOKIE_PATH = @"cookie.txt";
+
         public static (int x, int y) GetDirection(Direction dir)
         {
             switch (dir)
@@ -76,5 +81,27 @@ namespace AdventOfCode2019
             => ManhattanDistance(p.x, p.y);
 
         #endregion
+
+        public static void FetchInput()
+        {
+            int day  = DateTime.Today.Day;
+            int year = DateTime.Today.Year;
+
+            string INPUT_URL = @$"https://adventofcode.com/{year}/day/{day}/input";
+
+            var req = (HttpWebRequest)WebRequest.Create(INPUT_URL);
+            var cookie = new Cookie("session",
+                                    File.ReadAllText(COOKIE_PATH),
+                                    "/", ".adventofcode.com");
+            (req.CookieContainer ??= new CookieContainer()).Add(cookie);
+
+            var response = req.GetResponse().GetResponseStream();
+            if (response == null) return;
+
+            using var reader = new StreamReader(response);
+
+            string input = reader.ReadToEnd();
+            File.WriteAllText(INPUT_PATH, input.Trim());
+        }
     }
 }
