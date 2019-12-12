@@ -12,6 +12,50 @@ namespace AdventOfCode2019
 
     public static class Utility
     {
+        #region GCD_LCM
+
+        public static int GCD(int a, int b)
+        {
+            while (a != 0 && b != 0)
+            {
+                if (a > b)
+                    a %= b;
+                else
+                    b %= a;
+            }
+
+            int gcd = a == 0 ? b : a;
+
+            return gcd;
+        }
+
+        public static int LCM(int a, int b)
+        {
+            return (a / GCD(a, b)) * b;
+        }
+
+        public static long GCD(long a, long b)
+        {
+            while (a != 0 && b != 0)
+            {
+                if (a > b)
+                    a %= b;
+                else
+                    b %= a;
+            }
+
+            long gcd = a == 0 ? b : a;
+
+            return gcd;
+        }
+
+        public static long LCM(long a, long b)
+        {
+            return a / GCD(a, b) * b;
+        }
+
+        #endregion
+
         public static (int x, int y) GetDirection(Direction dir)
         {
             switch (dir)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using ReStructure.Sparse;
 
 namespace AdventOfCode2019
@@ -7,6 +8,9 @@ namespace AdventOfCode2019
     {
         private const int BLACK = 0;
         private const int WHITE = 1;
+
+        private const int TURN_LEFT = 0;
+        private const int TURN_RIGHT = 0;
 
         private class Robot
         {
@@ -32,8 +36,8 @@ namespace AdventOfCode2019
                 else
                 {
                     int tmp = _dir.x;
-                    _dir.x = _dir.y * (input == 0 ? 1 : -1);
-                    _dir.y = tmp * (input == 0 ? -1 : 1);
+                    _dir.x = _dir.y * (input == TURN_LEFT ? 1 : -1);
+                    _dir.y = tmp * (input == TURN_LEFT ? -1 : 1);
 
                     _pos.x += _dir.x;
                     _pos.y += _dir.y;
@@ -76,10 +80,15 @@ namespace AdventOfCode2019
         {
             var program = Intcode.ParseInput(input);
             var intcode = new Intcode();
-            var robot   = new Robot(WHITE);
+            var robot = new Robot(WHITE);
 
             Run(program, intcode, robot);
 
+            PrintMap(robot);
+        }
+
+        private static void PrintMap(Robot robot)
+        {
             var map = robot.GetMap();
             for (int i = robot.miny; i <= robot.maxy; i++)
             {
@@ -99,14 +108,16 @@ namespace AdventOfCode2019
             while (intcode.IsOver == false)
             {
                 intcode.Input = robot.GetOutput();
-                intcode.Compute(program, ip, false);
-                robot.SetInput((int)intcode.Output);
-                program = intcode.State;
-                ip = intcode.IP;
-                intcode.Compute(program, ip, false);
-                robot.SetInput((int)intcode.Output);
-                program = intcode.State;
-                ip = intcode.IP;
+                for (int i = 0; i < 2; i++)
+                {
+                    intcode.Compute(program, ip, false);
+                    robot.SetInput((int)intcode.Output);
+                    program = intcode.State;
+                    ip      = intcode.IP;
+                }
+                Console.Clear();
+                PrintMap(robot);
+                Thread.Sleep(20);
             }
         }
     }
