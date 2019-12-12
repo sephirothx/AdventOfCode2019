@@ -51,24 +51,7 @@ namespace AdventOfCode2019
 
         private static (int, int) Minterms(int x, int y)
         {
-            int a = Math.Abs(x),
-                b = Math.Abs(y);
-
-            if (x == 0 || y == 0)
-            {
-                return (x == 0 ? 0 : x / a,
-                        y == 0 ? 0 : y / b);
-            }
-
-            while (a != 0 && b != 0)
-            {
-                if (a > b)
-                    a %= b;
-                else
-                    b %= a;
-            }
-
-            int gcd = a == 0 ? b : a;
+            int gcd = Utility.GCD(x, y);
 
             return (x / gcd, y / gcd);
         }
