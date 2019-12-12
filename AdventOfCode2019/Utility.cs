@@ -12,30 +12,33 @@ namespace AdventOfCode2019
 
     public static class Utility
     {
+        public static (int x, int y) GetDirection(Direction dir)
+        {
+            switch (dir)
+            {
+            case Direction.Right: return (1, 0);
+            case Direction.Left:  return (-1, 0);
+            case Direction.Down:  return (0, -1);
+            case Direction.Up:    return (0, 1);
+            default:              throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
+            }
+        }
+
         #region GCD_LCM
 
         public static int GCD(int a, int b)
-        {
-            while (a != 0 && b != 0)
-            {
-                if (a > b)
-                    a %= b;
-                else
-                    b %= a;
-            }
-
-            int gcd = a == 0 ? b : a;
-
-            return gcd;
-        }
+            => (int)GCD((long)a, b);
 
         public static int LCM(int a, int b)
         {
-            return (a / GCD(a, b)) * b;
+            return a / GCD(a, b) * b;
         }
 
         public static long GCD(long a, long b)
         {
+            a = Math.Abs(a);
+            b = Math.Abs(b);
+
             while (a != 0 && b != 0)
             {
                 if (a > b)
@@ -55,18 +58,6 @@ namespace AdventOfCode2019
         }
 
         #endregion
-
-        public static (int x, int y) GetDirection(Direction dir)
-        {
-            switch (dir)
-            {
-            case Direction.Right: return (1, 0);
-            case Direction.Left:  return (-1, 0);
-            case Direction.Down:  return (0, -1);
-            case Direction.Up:    return (0, 1);
-            default:              throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
-            }
-        }
 
         #region ManhattanDistance
 
