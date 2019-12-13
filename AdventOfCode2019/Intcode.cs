@@ -102,6 +102,10 @@ namespace AdventOfCode2019
 
                 case Opcode.IN:
                     State[args[0]] = _inputs.Dequeue();
+                    // Day13 - part 2 interactive
+                    // var key = Console.ReadKey().Key;
+                    // State[args[0]] = key == ConsoleKey.LeftArrow  ? -1 :
+                    //                  key == ConsoleKey.RightArrow ? 1 : 0;
                     break;
 
                 case Opcode.OUT:
