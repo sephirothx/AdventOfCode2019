@@ -111,13 +111,11 @@ namespace AdventOfCode2019
                 for (int i = 0; i < 2; i++)
                 {
                     intcode.Compute(program, ip, false);
+                    if (intcode.IsOver) break;
                     robot.SetInput((int)intcode.Output);
                     program = intcode.State;
                     ip      = intcode.IP;
                 }
-                Console.Clear();
-                PrintMap(robot);
-                Thread.Sleep(20);
             }
         }
     }
