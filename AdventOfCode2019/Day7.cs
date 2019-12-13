@@ -24,8 +24,8 @@ namespace AdventOfCode2019
                 long signal = 0;
                 for (int i = 0; i < p.Length; i++)
                 {
-                    amps[i].Input = p[i];
-                    amps[i].Input = signal;
+                    amps[i].AddInput(p[i]);
+                    amps[i].AddInput(signal);
                     amps[i].Compute(program);
                     signal = amps[i].Output;
                 }
@@ -55,7 +55,7 @@ namespace AdventOfCode2019
                     amps[i]       = new Intcode();
                     program[i]    = Intcode.ParseInput(input);
                     ip[i]         = 0;
-                    amps[i].Input = p[i];
+                    amps[i].AddInput(p[i]);
                 }
 
                 bool go = true;
@@ -63,7 +63,7 @@ namespace AdventOfCode2019
                 {
                     for (int i = 0; i < p.Length; i++)
                     {
-                        amps[i].Input = signal;
+                        amps[i].AddInput(signal);
                         amps[i].Compute(program[i], ip[i], false);
                         signal = amps[i].Output;
 

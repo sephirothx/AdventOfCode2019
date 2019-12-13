@@ -6,7 +6,7 @@
         {
             var p = Intcode.ParseInput(input);
             var i = new Intcode();
-            i.Input = 1;
+            i.AddInput(1);
             i.Compute(p);
         }
 
@@ -14,7 +14,7 @@
         {
             var p = Intcode.ParseInput(input);
             var i = new Intcode();
-            i.Input = 2;
+            i.AddInput(2);
             i.Compute(p);
         }
     }

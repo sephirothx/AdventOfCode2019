@@ -107,7 +107,7 @@ namespace AdventOfCode2019
 
             while (intcode.IsOver == false)
             {
-                intcode.Input = robot.GetOutput();
+                intcode.AddInput(robot.GetOutput());
                 for (int i = 0; i < 2; i++)
                 {
                     intcode.Compute(program, ip, false);

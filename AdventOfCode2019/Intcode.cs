@@ -56,10 +56,19 @@ namespace AdventOfCode2019
         public static  Intcode Instance => _instance ??= new Intcode();
 
         private readonly Queue<long> _inputs = new Queue<long>();
+        public void AddInput(long value) => _inputs.Enqueue(value);
 
+        private long? _input;
         public long Input
         {
-            set => _inputs.Enqueue(value);
+            private get
+            {
+                var ret = _input ?? _inputs.Dequeue();
+                _input = null;
+                return ret;
+            }
+
+            set => _input = value;
         }
 
         public long Output { get; private set; }
@@ -101,7 +110,7 @@ namespace AdventOfCode2019
                     break;
 
                 case Opcode.IN:
-                    State[args[0]] = _inputs.Dequeue();
+                    State[args[0]] = Input;
                     // Day13 - part 2 interactive
                     // var key = Console.ReadKey().Key;
                     // State[args[0]] = key == ConsoleKey.LeftArrow  ? -1 :
