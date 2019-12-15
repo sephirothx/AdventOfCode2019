@@ -8,6 +8,7 @@
   <ItemGroup>
     <None Remove="Day13 - me.gif" />
     <None Remove="Day13 - pc.gif" />
+    <None Remove="Day15.gif" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,7 +8,7 @@ namespace AdventOfCode2019
 {
     class Day15
     {
-        private static SparseMatrix<long>  _map     = new SparseMatrix<long>(-1);
+        private static SparseMatrix<long>  _map     = new SparseMatrix<long>(3);
         private static HashSet<(int, int)> _visited = new HashSet<(int, int)>();
 
         private static Intcode _drone;
@@ -21,12 +21,11 @@ namespace AdventOfCode2019
             _drone = new Intcode();
 
             Explore(program, 0, 0, 0);
-            Console.WriteLine(ShortestPathLength((0, 0)));
+            Console.WriteLine(AStar((0, 0)));
         }
 
         public static void Part2(string input)
         {
-            PrintMaze();
             Console.WriteLine(BFS(_target_pos.x, _target_pos.y));
         }
 
@@ -121,6 +120,40 @@ namespace AdventOfCode2019
             return int.MaxValue;
         }
 
+        public static int AStar((int x, int y) start)
+        {
+            var unvisited = new PriorityQueue<((int x, int y) pos, int dist)>(PriorityQueueOrder.Descending);
+            var visited   = new HashSet<(int x, int y)>();
+
+            unvisited.Push((start, 0), 0);
+
+            while (unvisited.IsEmpty == false)
+            {
+                var curr = unvisited.Pop();
+                var node = curr.Value;
+
+                if (_map[node.pos.x, node.pos.y] == 2)
+                {
+                    return node.dist;
+                }
+
+                if (visited.Contains(node.pos)) continue;
+
+                visited.Add(node.pos);
+
+                foreach (var n in GetNeighbors(node.pos))
+                {
+                    if (visited.Contains(n)) continue;
+
+                    if (_map[n.x, n.y] > 0)
+                        unvisited.Push((n, node.dist + 1),
+                                       Utility.ManhattanDistance(_target_pos, n));
+                }
+            }
+
+            return int.MaxValue;
+        }
+
         private static (int x, int y)[] GetNeighbors((int x, int y) pos)
         {
             var output = new List<(int, int)>();
@@ -137,26 +170,24 @@ namespace AdventOfCode2019
             return output.ToArray();
         }
 
+        private static void PrintCell(int x, int y, ConsoleColor color)
+        {
+            Console.SetCursorPosition(x - _map.MinX, y - _map.MinY);
+            Console.BackgroundColor = color;
+            Console.Write(' ');
+
+            Console.ResetColor();
+        }
+
         private static void PrintMaze()
         {
+            var bg = new[] {ConsoleColor.Gray, ConsoleColor.Black, ConsoleColor.Blue, ConsoleColor.Gray};
+
             for (int y = _map.MinY; y <= _map.MaxY; y++)
             {
                 for (int x = _map.MinX; x <= _map.MaxX; x++)
                 {
-                    if (x == 0 &&
-                        y == 0)
-                    {
-                        Console.Write('O');
-                        continue;
-                    }
-
-                    Console.Write(_map[x, y] switch
-                    {
-                        0 => '█',
-                        1 => ' ',
-                        2 => 'X',
-                        _ => ' '
-                    });
+                    PrintCell(x, y, bg[_map[x, y]]);
                 }
 
                 Console.WriteLine();
