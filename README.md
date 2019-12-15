@@ -5,5 +5,4 @@ Day15 visualization:
 
 Day 13 visualization:
 
-![Day 13 me](AdventOfCode2019/Day13-me.gif)me
-![Day 13 pc](AdventOfCode2019/Day13 - pc.gif)code
+![Day 13 pc](AdventOfCode2019/Day13-pc.gif)
