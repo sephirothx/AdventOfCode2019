@@ -6,10 +6,10 @@ namespace AdventOfCode2019
 {
     public enum Direction
     {
-        Right,
-        Left,
-        Down,
-        Up
+        Up = 1,
+        Down = 2,
+        Right = 3,
+        Left = 4
     }
 
     public static class Utility

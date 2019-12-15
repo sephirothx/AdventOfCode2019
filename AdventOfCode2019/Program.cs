@@ -7,12 +7,14 @@ namespace AdventOfCode2019
     {
         private static void Main()
         {
+            //Utility.FetchInput();
+
+            // var input = File.ReadAllLines(Utility.INPUT_PATH);
             var input = File.ReadAllText(Utility.INPUT_PATH);
 
-            Utility.FetchInput();
-
             var start = DateTime.Now.TimeOfDay;
-            Day13.Part2(input);
+            Day15.Part1(input);
+            Day15.Part2(input);
             var end = DateTime.Now.TimeOfDay;
 
             Console.WriteLine();
