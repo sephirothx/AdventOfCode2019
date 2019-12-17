@@ -17,6 +17,8 @@ namespace AdventOfCode2019
         public const string INPUT_PATH = @"input.txt";
         public const string COOKIE_PATH = @"cookie.txt";
 
+        #region Direction
+
         public static (int x, int y) GetDirection(Direction dir)
         {
             switch (dir)
@@ -28,6 +30,31 @@ namespace AdventOfCode2019
             default:              throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
             }
         }
+
+        public static (int x, int y) RotateLeft((int x, int y) dir)
+        {
+            int tmp = dir.x;
+            dir.x = dir.y;
+            dir.y = -tmp;
+
+            return dir;
+        }
+
+        public static (int x, int y) RotateRight((int x, int y) dir)
+        {
+            int tmp = dir.x;
+            dir.x = -dir.y;
+            dir.y = tmp;
+
+            return dir;
+        }
+
+        public static (int x, int y) TupleSum((int x, int y) p1, (int x, int y) p2)
+        {
+            return (p1.x + p2.x, p1.y + p2.y);
+        }
+
+        #endregion
 
         #region GCD_LCM
 
