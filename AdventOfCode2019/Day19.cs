@@ -9,13 +9,13 @@ namespace AdventOfCode2019
         public static void Part1(string input)
         {
             program = Intcode.ParseInput(input);
-            long ans = 0;
+            int ans = 0;
 
             for (int y = 0; y < 50; y++)
             {
                 for (int x = 0; x < 50; x++)
                 {
-                    ans += IsInBeam(x, y) ? 1 : 0;
+                    ans += IsInsideBeam(x, y);
                 }
             }
 
@@ -24,51 +24,35 @@ namespace AdventOfCode2019
 
         public static void Part2(string input)
         {
-            int count = 0;
-            int step  = 1000;
+            int y = 100;
+            int x = 0;
 
-            int y = 1000,
-                x = 0;
-
-            string ans = "";
+            for (int i = y/2; i < y*2; i++)
+            {
+                x = IsInsideBeam(i, y) == 1 ? i : x;
+            }
 
             while (true)
             {
-                for (int i = y / 2; i < y; i++)
-                {
-                    x = IsInBeam(i, y) ? i : x;
-                }
+                y++;
+                x += IsInsideBeam(x + 1, y);
 
-                if (step == -1 && count++ > 10)
+                if (IsInsideBeam(x-99, y+99) == 1)
                 {
-                    Console.WriteLine(ans);
+                    Console.WriteLine($"{(x - 99) * 10000 + y}");
                     return;
                 }
-
-                if (IsInBeam(x - 99, y + 99))
-                {
-                    if (step == -1)
-                    {
-                        ans = $"{x - 99}{y}";
-                    }
-
-                    y    -= step;
-                    step /= 10;
-                    if (step == 0) step = -1;
-                }
-
-                y += step;
             }
         }
 
-        private static bool IsInBeam(int x, int y)
+        private static int IsInsideBeam(int x, int y)
         {
             var intcode = new Intcode();
             intcode.AddInput(x);
             intcode.AddInput(y);
             intcode.Compute(program);
 
-            return intcode.Output == 1;
+            return (int)intcode.Output;
         }
     }
 }
