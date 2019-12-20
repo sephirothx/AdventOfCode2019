@@ -128,7 +128,7 @@ namespace AdventOfCode2019
             using var reader = new StreamReader(response);
 
             string input = reader.ReadToEnd();
-            File.WriteAllText(INPUT_PATH, input.Trim());
+            File.WriteAllText(INPUT_PATH, input.TrimEnd('\n'));
         }
     }
 }
