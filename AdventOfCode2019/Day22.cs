@@ -48,8 +48,8 @@ namespace AdventOfCode2019
         {
             var re = new Regex(@"^(.*?)\s?(-?\d+)?$");
 
-            BigInteger a = 0;
-            BigInteger b = 1;
+            BigInteger a = 0; // first index of the permutation
+            BigInteger b = 1; // step increase of the permutation
 
             BigInteger n;
 
