@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using System.Numerics;
+using System.Text.RegularExpressions;
+using static System.Numerics.BigInteger; // ModPow
 
 namespace AdventOfCode2019
 {
@@ -30,16 +31,15 @@ namespace AdventOfCode2019
                                                                     long deck_size,
                                                                     long iterations)
         {
-            var a = first_iteration_values.a;
-            var b = first_iteration_values.b;
+            var (a, b) = first_iteration_values;
 
             // https://stackoverflow.com/a/1522895/9815377
             // Sum of a geometric sequence:
             // b^0 + b^1 + ... + b^(n-1) (mod m) = (b^n - 1)/(b - 1) (mod m)
-            var seq = (BigInteger.ModPow(b, iterations, deck_size) - 1) * ModInverse(b - 1, deck_size) % deck_size;
+            var seq = (ModPow(b, iterations, deck_size) - 1) * ModInverse(b - 1, deck_size) % deck_size;
 
             var out_a = a * seq;
-            var out_b = BigInteger.ModPow(b, iterations, deck_size);
+            var out_b = ModPow(b, iterations, deck_size);
 
             return (out_a, out_b);
         }
@@ -60,12 +60,12 @@ namespace AdventOfCode2019
                 switch (match.Groups[1].Value)
                 {
                 case "cut":
-                    n = (BigInteger.Parse(match.Groups[2].Value) + deck_size) % deck_size;
+                    n = (Parse(match.Groups[2].Value) + deck_size) % deck_size;
                     a = (a + n * b) % deck_size;
                     break;
 
                 case "deal with increment":
-                    n = BigInteger.Parse(match.Groups[2].Value);
+                    n = Parse(match.Groups[2].Value);
                     n = ModInverse(n, deck_size);
                     b = b * n % deck_size;
                     break;
@@ -82,7 +82,7 @@ namespace AdventOfCode2019
 
         private static BigInteger ModInverse(BigInteger n, BigInteger mod)
         {
-            return BigInteger.ModPow(n, mod - 2, mod);
+            return ModPow(n, mod - 2, mod);
         }
     }
 }
