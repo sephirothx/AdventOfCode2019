@@ -63,7 +63,7 @@ namespace AdventOfCode2019
         {
             private get
             {
-                var ret = _input ?? _inputs.Dequeue();
+                var ret = _input ?? (_inputs.Any() ? _inputs.Dequeue() : -1);
                 _input = null;
                 return ret;
             }
@@ -71,7 +71,22 @@ namespace AdventOfCode2019
             set => _input = value;
         }
 
-        public long Output { get; private set; }
+        public bool HasInput()
+        {
+            return _input != null || _inputs.Any();
+        }
+
+        public Queue<long> Outputs = new Queue<long>();
+        private long _output;
+        public long Output
+        {
+            get => _output;
+            private set
+            {
+                Outputs.Enqueue(value);
+                _output = value;
+            }
+        }
 
         public long[] State { get; private set; }
         public long   IP    { get; private set; }
@@ -87,7 +102,7 @@ namespace AdventOfCode2019
                         .ToArray();
         }
 
-        public void Compute(long[] program, long ip = 0, bool runToEnd = true)
+        public void Compute(long[] program, long ip = 0, bool runToEnd = true, bool stopAtInput = false)
         {
             State = new long[10000];
             Array.Copy(program, State, program.Length);
@@ -111,10 +126,7 @@ namespace AdventOfCode2019
 
                 case Opcode.IN:
                     State[args[0]] = Input;
-                    // Day13 - part 2 interactive
-                    // var key = Console.ReadKey().Key;
-                    // State[args[0]] = key == ConsoleKey.LeftArrow  ? -1 :
-                    //                  key == ConsoleKey.RightArrow ? 1 : 0;
+                    if (stopAtInput) return;
                     break;
 
                 case Opcode.OUT:

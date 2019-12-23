@@ -13,8 +13,8 @@ namespace AdventOfCode2019
             var input = File.ReadAllText(Utility.INPUT_PATH);
 
             var start = DateTime.Now.TimeOfDay;
-            Day21.Part1(input);
-            Day21.Part2(input);
+            Day23.Part1(input);
+            Day23.Part2(input);
             var end = DateTime.Now.TimeOfDay;
 
             Console.WriteLine();
