@@ -51,22 +51,23 @@ namespace AdventOfCode2019
             BigInteger a = 0; // first index of the permutation
             BigInteger b = 1; // step increase of the permutation
 
-            BigInteger n;
-
             foreach (string s in input)
             {
                 var match = re.Match(s);
 
+                var arg = match.Groups[2].Success
+                              ? BigInteger.Parse(match.Groups[2].Value)
+                              : BigInteger.Zero;
+
                 switch (match.Groups[1].Value)
                 {
                 case "cut":
-                    n = (Parse(match.Groups[2].Value) + deck_size) % deck_size;
+                    var n = (arg + deck_size) % deck_size;
                     a = (a + n * b) % deck_size;
                     break;
 
                 case "deal with increment":
-                    n = Parse(match.Groups[2].Value);
-                    n = ModInverse(n, deck_size);
+                    n = ModInverse(arg, deck_size);
                     b = b * n % deck_size;
                     break;
 
