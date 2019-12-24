@@ -9,12 +9,12 @@ namespace AdventOfCode2019
         {
             Utility.FetchInput();
 
-            //var input = File.ReadAllLines(Utility.INPUT_PATH);
-            var input = File.ReadAllText(Utility.INPUT_PATH);
+            var input = File.ReadAllLines(Utility.INPUT_PATH);
+            //var input = File.ReadAllText(Utility.INPUT_PATH);
 
             var start = DateTime.Now.TimeOfDay;
-            Day23.Part1(input);
-            Day23.Part2(input);
+            Day24.Part1(input);
+            Day24.Part2(input);
             var end = DateTime.Now.TimeOfDay;
 
             Console.WriteLine();
