@@ -1,15 +1,15 @@
-﻿namespace AdventOfCode2019
+﻿using System;
+
+namespace AdventOfCode2019
 {
     class Day25
     {
-        public static void Part1(string[] input)
+        public static void Part1(string input)
         {
+            var program = Intcode.ParseInput(input);
+            var intcode = new Intcode();
 
-        }
-
-        public static void Part2(string[] input)
-        {
-
+            intcode.Compute(program, isXmas:true);
         }
     }
 }

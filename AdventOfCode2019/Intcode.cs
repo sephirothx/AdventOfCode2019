@@ -102,7 +102,10 @@ namespace AdventOfCode2019
                         .ToArray();
         }
 
-        public void Compute(long[] program, long ip = 0, bool runToEnd = true, bool stopAtInput = false)
+        public void Compute(long[] program, long ip = 0,
+                            bool runToEnd = true,
+                            bool stopAtInput = false,
+                            bool isXmas = false)
         {
             State = new long[10000];
             Array.Copy(program, State, program.Length);
@@ -125,6 +128,15 @@ namespace AdventOfCode2019
                     break;
 
                 case Opcode.IN:
+                    if (isXmas && _inputs.Count == 0)
+                    {
+                        string command = Console.ReadLine() ?? "";
+                        foreach (char c in command)
+                        {
+                            AddInput(c);
+                        }
+                        AddInput(10);
+                    }
                     State[args[0]] = Input;
                     if (stopAtInput) return;
                     break;
@@ -132,7 +144,10 @@ namespace AdventOfCode2019
                 case Opcode.OUT:
                     Output = args[0];
                     IsOver = false;
-                    //Console.WriteLine(Output);
+                    if (isXmas)
+                    {
+                        Console.Write((char)Output);
+                    }
                     if (runToEnd == false) return;
                     break;
 
