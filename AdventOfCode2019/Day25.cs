@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AdventOfCode2019
+﻿namespace AdventOfCode2019
 {
     class Day25
     {
@@ -9,7 +7,7 @@ namespace AdventOfCode2019
             var program = Intcode.ParseInput(input);
             var intcode = new Intcode();
 
-            intcode.Compute(program, isXmas:true);
+            intcode.Compute(program, isXmas: true);
         }
     }
 }
